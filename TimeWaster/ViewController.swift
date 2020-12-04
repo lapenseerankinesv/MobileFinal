@@ -14,6 +14,14 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
 
-
+    @IBAction func slidingPuzzleButton(_ sender: UIButton) {
+        performSegue(withIdentifier: "slidingLink", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let nextVC = segue.destination as! SlidingPuzzleViewController
+        nextVC.navigationItem.title = "Silding Puzzle"
+    }
+    
 }
 

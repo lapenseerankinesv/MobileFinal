@@ -16,6 +16,8 @@
 		4C72E8922579D8F90098FCA2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C72E8902579D8F90098FCA2 /* LaunchScreen.storyboard */; };
 		4C72E89D2579D8F90098FCA2 /* TimeWasterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C72E89C2579D8F90098FCA2 /* TimeWasterTests.swift */; };
 		4C72E8A82579D8F90098FCA2 /* TimeWasterUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C72E8A72579D8F90098FCA2 /* TimeWasterUITests.swift */; };
+		4C72E8C62579DFEB0098FCA2 /* SlidingPuzzleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C72E8C52579DFEB0098FCA2 /* SlidingPuzzleViewController.swift */; };
+		4C72E8CB2579DFFF0098FCA2 /* SlidingScoresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C72E8CA2579DFFF0098FCA2 /* SlidingScoresViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,8 @@
 		4C72E8A32579D8F90098FCA2 /* TimeWasterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeWasterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C72E8A72579D8F90098FCA2 /* TimeWasterUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeWasterUITests.swift; sourceTree = "<group>"; };
 		4C72E8A92579D8F90098FCA2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4C72E8C52579DFEB0098FCA2 /* SlidingPuzzleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingPuzzleViewController.swift; sourceTree = "<group>"; };
+		4C72E8CA2579DFFF0098FCA2 /* SlidingScoresViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingScoresViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +109,8 @@
 				4C72E8842579D8F80098FCA2 /* SceneDelegate.swift */,
 				4C72E8862579D8F80098FCA2 /* ViewController.swift */,
 				4C72E8882579D8F80098FCA2 /* Main.storyboard */,
+				4C72E8C52579DFEB0098FCA2 /* SlidingPuzzleViewController.swift */,
+				4C72E8CA2579DFFF0098FCA2 /* SlidingScoresViewController.swift */,
 				4C72E88E2579D8F90098FCA2 /* Assets.xcassets */,
 				4C72E8902579D8F90098FCA2 /* LaunchScreen.storyboard */,
 				4C72E8932579D8F90098FCA2 /* Info.plist */,
@@ -263,7 +269,9 @@
 			files = (
 				4C72E88D2579D8F80098FCA2 /* TimeWaster.xcdatamodeld in Sources */,
 				4C72E8872579D8F80098FCA2 /* ViewController.swift in Sources */,
+				4C72E8C62579DFEB0098FCA2 /* SlidingPuzzleViewController.swift in Sources */,
 				4C72E8832579D8F80098FCA2 /* AppDelegate.swift in Sources */,
+				4C72E8CB2579DFFF0098FCA2 /* SlidingScoresViewController.swift in Sources */,
 				4C72E8852579D8F80098FCA2 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
