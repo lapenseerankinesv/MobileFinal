@@ -6,35 +6,79 @@
 //
 
 import UIKit
+import Foundation
+import CoreData
 
 class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var scoresTable: UITableView!
     @IBOutlet weak var difficultly: UILabel!
+    
+    var dataManager : NSManagedObjectContext!
     let cellID = "cellID"
     var getDiff = 5
-    var getTime = -1
+    var getTime = Float(-1.0)
     var getName = ""
+    var won = false
     var names = ["---", "---", "---", "---", "---"]
-    var times = [Int.max, Int.max, Int.max, Int.max, Int.max]
+    var times = [Float(-1), Float(-1), Float(-1), Float(-1), Float(-1)]
+    
+    var listArray = [NSManagedObject]()
 
     @IBOutlet weak var difficultyLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
-        difficultly.text = "Difficulty: " + String(getDiff)
+        difficultly.text = "Difficulty: \(getDiff)"
         scoresTable.dataSource = self
         scoresTable.delegate = self
-        
-        if getName != "___" {
-            for i in 0...4 {
-                if names[i] == "---" {
-                    names[i] = getName
-                    times[i] = getTime
-                    break
-                }
-            }
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        dataManager = appDelegate.persistentContainer.viewContext
+        fetchData()
+        if won {
+            addAndSave()
         }
         // Do any additional setup after loading the view.
+    }
+    
+    func addAndSave() {
+        let entName = "Score\(self.getDiff)"
+        for i in 0...4 {
+            if names[i] == "---" {
+                names[i] = getName
+                times[i] = Float(getTime)
+                let newEntity = NSEntityDescription.insertNewObject(forEntityName: entName, into: dataManager)
+                newEntity.setValue(getName, forKey: "username")
+                newEntity.setValue(times[i], forKey: "timing")
+                do {
+                    try self.dataManager.save()
+                    listArray.append(newEntity)
+                } catch {
+                    print("Error saving data")
+                }
+                break
+            }
+        }
+        fetchData()
+        
+    }
+    
+    func fetchData() {
+        let entName = "Score\(self.getDiff)"
+        let fetchRequest : NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: entName)
+        do {
+            let result = try dataManager.fetch(fetchRequest)
+            listArray = result as! [NSManagedObject]
+            var i = 0
+            for item in listArray {
+                let uName = item.value(forKey: "username") as! String
+                let uScore = item.value(forKey: "timing") as! Float
+                names[i] = uName
+                times[i] = uScore
+                i += 1
+            }
+        } catch {
+            print("Error retriving data")
+        }
     }
 
     @IBAction func playSlidingAgain(_ sender: UIButton) {
@@ -53,7 +97,7 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
         }
         let temp = times[indexPath.row]
         var str = String(temp)
-        if temp == Int.max {
+        if temp == Float(-1) {
             str = "---"
         }
         cell?.textLabel?.text = names[indexPath.row] + "\t" + str
