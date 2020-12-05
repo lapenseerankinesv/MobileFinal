@@ -17,12 +17,86 @@ class SlidingPuzzleViewController: UIViewController {
     @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var startStopButton: UIButton!
     
+    var puzzle = Array(1...diff*diff-1)
+    puzzle.append(0)
+    var rPuzzle = [Int]()
+    
     var timer:Timer = Timer()
     var timerCounting = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         difficultyLabel.text = "\(diff) x \(diff) Puzzle"
+    }
+    
+    func countInversions() -> Int {
+        var inversions = 0;
+        let size = diff * diff
+        for i in 0...size-1 {
+            if i+1 < size {
+                for j in i+1...size-1 {
+                    if rPuzzle[i] > rPuzzle[j] && rPuzzle[i] != size && rPuzzle[j] != size {
+                        inversions += 1
+                    }
+                }
+            }
+        }
+        return inversions
+    }
+    
+    func getBlankRow() -> Int {
+        let size = diff * diff
+        var n = 0
+        var r = 0
+        var row = 0
+        for i in 0...size-1 {
+            if n == diff {
+                r += 1
+                n = 0
+            }
+            if rPuzzle[i] == size {
+                row = r
+            }
+            n += 1
+        }
+        return row + 1
+    }
+    
+    func fixPolarity() {
+        let blankRow = getBlankRow()
+        if (blankRow != 0 && blankRow != 1)  {
+            let v = rPuzzle[0]
+            rPuzzle[0] = rPuzzle[1]
+            rPuzzle[1] = v
+        }
+        else {
+            let size = diff * diff - 1
+            let l = rPuzzle[size]
+            rPuzzle[size] = rPuzzle[size-1]
+            rPuzzle[size-1] = l
+        }
+    }
+    
+    func initGame() {
+        for _ in 1...diff*diff {
+            let index = Int.random(in: 0..<puzzle.count)
+            let number = puzzle[index]
+            puzzle.remove(at: index)
+            rPuzzle.append(number)
+        }
+        let x = countInversions()
+
+        if diff % 2 == 0 {
+            let blankRow = getBlankRow()
+            if (x + diff - blankRow) % 2 != 0 {
+                fixPolarity()
+            }
+        }
+        else {
+            if x % 2 != 0 { // odd number of inversion
+            fixPolarity()
+            }
+        }
     }
     
     @IBAction func startStopButtonTapped(_ sender: UIButton) {
