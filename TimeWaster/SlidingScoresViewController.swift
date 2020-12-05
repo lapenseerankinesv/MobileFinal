@@ -17,11 +17,11 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
     var dataManager : NSManagedObjectContext!
     let cellID = "cellID"
     var getDiff = 5
-    var getTime = -1
+    var getTime = ""
     var getName = ""
     var won = false
     var names = ["---", "---", "---", "---", "---"]
-    var times = [-1, -1, -1, -1, -1]
+    var times = ["---", "---", "---", "---", "---"]
     
     var listArray = [NSManagedObject]()
 
@@ -70,7 +70,7 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
             var i = 0
             for item in listArray {
                 let uName = item.value(forKey: "username") as! String
-                let uScore = item.value(forKey: "timing") as! Int
+                let uScore = item.value(forKey: "timing") as! String
                 names[i] = uName
                 times[i] = uScore
                 i += 1
@@ -94,12 +94,9 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
             cell = UITableViewCell(style:UITableViewCell.CellStyle.default,
                                    reuseIdentifier: cellID)
         }
-        let temp = times[indexPath.row]
-        var str = String(temp)
-        if temp == -1 {
-            str = "---"
-        }
-        cell?.textLabel?.text = names[indexPath.row] + "\t" + str
+        
+        cell?.textLabel?.text = "\(names[indexPath.row])\t\t\(times[indexPath.row])"
+        //cell?.textLabel?.text = String(format: "%s%-10s", "\(names[indexPath.row])", "\(times[indexPath.row])")
         return cell!
     }
     
