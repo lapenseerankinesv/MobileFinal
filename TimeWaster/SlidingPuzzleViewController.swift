@@ -40,6 +40,26 @@ class SlidingPuzzleViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
         
     }
+    @IBAction func diffButtonTapped(_ sender: UIBarButtonItem) {
+        let alert = UIAlertController(title: "Choose Difficulty Setting", message: "Current Difficulty: \(self.diff)\n\n\n\n\n\n", preferredStyle: .alert)
+        let stepper = UIStepper(frame:CGRect(x: 87, y: 100, width: 250, height: 80))
+        stepper.maximumValue = 10
+        stepper.minimumValue = 3
+        stepper.stepValue = 1.0
+        stepper.value = Double(diff)
+        stepper.isContinuous = true
+        alert.view.addSubview(stepper)
+        
+        let sliderAction = UIAlertAction(title: "OK", style: .default, handler: { (result : UIAlertAction) -> Void in
+            self.diff = Int(stepper.value)
+            alert.message = "Current Difficulty: \(self.diff)\n\n\n\n\n\n"
+            self.difficultyLabel.text = String(self.diff) + " x " + String(self.diff) + " Puzzle"
+        })
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
+        alert.addAction(sliderAction)
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true, completion: nil)
+    }
     
     func gotto() {
         performSegue(withIdentifier: "slidingScoresLink", sender: self)

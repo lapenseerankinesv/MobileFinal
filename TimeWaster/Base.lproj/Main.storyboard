@@ -61,7 +61,7 @@
         <scene sceneID="qdH-jc-Oqc">
             <objects>
                 <viewController id="2P9-jT-yDN" customClass="SlidingPuzzleViewController" customModule="TimeWaster" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="tOF-Zq-Eor">
+                    <view key="view" contentMode="scaleToFill" ambiguous="YES" id="tOF-Zq-Eor">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -92,7 +92,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nh3-Hi-4sB">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nh3-Hi-4sB">
                                 <rect key="frame" x="127" y="766" width="160" height="41"/>
                                 <color key="backgroundColor" systemColor="systemBlueColor"/>
                                 <constraints>
@@ -114,10 +114,18 @@
                             <constraint firstItem="nh3-Hi-4sB" firstAttribute="leading" secondItem="CEd-Oo-6cg" secondAttribute="leading" constant="106" id="P79-UQ-6Le"/>
                             <constraint firstItem="CEd-Oo-6cg" firstAttribute="bottom" secondItem="nh3-Hi-4sB" secondAttribute="bottom" constant="64" id="fAx-X7-c2J"/>
                             <constraint firstItem="d9v-UW-Pk8" firstAttribute="centerX" secondItem="nh3-Hi-4sB" secondAttribute="centerX" id="rBW-Th-daN"/>
+                            <constraint firstItem="nh3-Hi-4sB" firstAttribute="centerX" secondItem="tOF-Zq-Eor" secondAttribute="centerX" id="uh9-Oh-nq7"/>
                             <constraint firstItem="d9v-UW-Pk8" firstAttribute="top" secondItem="CEd-Oo-6cg" secondAttribute="top" constant="138" id="uup-nU-VwV"/>
+                            <constraint firstItem="nh3-Hi-4sB" firstAttribute="centerY" secondItem="tOF-Zq-Eor" secondAttribute="centerY" id="zYt-h1-1su"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="apC-Ex-iRE"/>
+                    <navigationItem key="navigationItem" id="apC-Ex-iRE">
+                        <barButtonItem key="rightBarButtonItem" title="Difficulty" id="Ioq-xc-cKp">
+                            <connections>
+                                <action selector="diffButtonTapped:" destination="2P9-jT-yDN" id="g0A-gt-Knc"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="difficultyLabel" destination="GCg-Ka-vej" id="ve0-pT-UHo"/>
                         <segue destination="oiR-md-tKz" kind="show" identifier="slidingScoresLink" id="04R-Ow-wuB"/>
