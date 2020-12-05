@@ -11,19 +11,46 @@ class SlidingPuzzleViewController: UIViewController {
 
     var name = ""
     var won = false
-    var time = Float(0.0)
+    var time = 0
     var diff = 3
     @IBOutlet weak var difficultyLabel: UILabel!
+    @IBOutlet weak var timerLabel: UILabel!
+    
+    var timer:Timer = Timer()
+    var timerCounting = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         difficultyLabel.text = "\(diff) x \(diff) Puzzle"
+        if (!timerCounting) {
+            timerCounting = true;
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCounter), userInfo: nil, repeats: true)
+        }
+    }
+    
+    @objc func timerCounter() {
+        time += 1
+    }
+    
+    func secondsToHoursMinutesSecond(seconds: Int) -> (Int, Int, Int) {
+        return ((seconds / 3600), ((seconds % 3600) / 60), ((seconds % 3600) % 60))
+    }
+    
+    func makeTimeString(hours: Int, minutes: Int, seconds: Int) {
+        var timeString = ""
+        timeString += String(format: "0%2d",hours)
+        timeString += " : "
+        timeString += String(format: "0%2d",minutes)
+        timeString += " : "
+        timeString += String(format: "0%2d",seconds)
+        return timeString
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let nextVC = segue.destination as! SlidingScoresViewController
         nextVC.navigationItem.title = "Sliding High Scores"
         nextVC.getDiff = self.diff
-        nextVC.getTime = Float(self.diff) //self.time
+        nextVC.getTime = self.diff //self.time
         nextVC.getName = self.name
         nextVC.won = self.won
     }

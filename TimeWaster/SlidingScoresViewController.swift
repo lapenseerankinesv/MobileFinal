@@ -17,11 +17,11 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
     var dataManager : NSManagedObjectContext!
     let cellID = "cellID"
     var getDiff = 5
-    var getTime = Float(-1.0)
+    var getTime = -1
     var getName = ""
     var won = false
     var names = ["---", "---", "---", "---", "---"]
-    var times = [Float(-1), Float(-1), Float(-1), Float(-1), Float(-1)]
+    var times = [-1, -1, -1, -1, -1]
     
     var listArray = [NSManagedObject]()
 
@@ -45,7 +45,7 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
         for i in 0...4 {
             if names[i] == "---" {
                 names[i] = getName
-                times[i] = Float(getTime)
+                times[i] = getTime
                 let newEntity = NSEntityDescription.insertNewObject(forEntityName: entName, into: dataManager)
                 newEntity.setValue(getName, forKey: "username")
                 newEntity.setValue(times[i], forKey: "timing")
@@ -59,7 +59,6 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
             }
         }
         fetchData()
-        
     }
     
     func fetchData() {
@@ -71,7 +70,7 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
             var i = 0
             for item in listArray {
                 let uName = item.value(forKey: "username") as! String
-                let uScore = item.value(forKey: "timing") as! Float
+                let uScore = item.value(forKey: "timing") as! Int
                 names[i] = uName
                 times[i] = uScore
                 i += 1
@@ -97,7 +96,7 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
         }
         let temp = times[indexPath.row]
         var str = String(temp)
-        if temp == Float(-1) {
+        if temp == -1 {
             str = "---"
         }
         cell?.textLabel?.text = names[indexPath.row] + "\t" + str
