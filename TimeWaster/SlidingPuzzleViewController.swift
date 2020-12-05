@@ -103,9 +103,10 @@ class SlidingPuzzleViewController: UIViewController {
     func didWeWin() {
         var win = true
         let size = diff
-        for i in 1...size*size-1 {
-            if rPuzzle[i] != i {
-            win = false
+        for i in 0...size*size-2 {
+            if rPuzzle[i] != i+1 {
+                win = false
+                break
             }
         }
         if win {
