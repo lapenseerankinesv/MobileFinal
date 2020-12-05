@@ -99,6 +99,19 @@ class SlidingPuzzleViewController: UIViewController {
         }
     }
     
+    func didWeWin() {
+        var win = true
+        let size = diff
+        for i in 1...size*size-1 {
+            if rPuzzle[i] != i {
+            win = false
+            }
+        }
+        if win {
+            winGame()
+        }
+    }
+    
     @IBAction func startStopButtonTapped(_ sender: UIButton) {
         if (timerCounting) {
             timerCounting = false
