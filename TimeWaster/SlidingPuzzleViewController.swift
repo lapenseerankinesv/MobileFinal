@@ -199,7 +199,7 @@ class SlidingPuzzleViewController: UIViewController {
         let alert = UIAlertController(title: "Choose Difficulty Setting", message: "Current Difficulty: \(self.diff)\n\n\n\n\n\n", preferredStyle: .alert)
         
         let stepper = UIStepper(frame:CGRect(x: 87, y: 100, width: 250, height: 80))
-        stepper.maximumValue = 10
+        stepper.maximumValue = 6
         stepper.minimumValue = 3
         stepper.stepValue = 1.0
         stepper.value = Double(diff)
