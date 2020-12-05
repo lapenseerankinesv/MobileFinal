@@ -97,6 +97,7 @@ class SlidingPuzzleViewController: UIViewController {
             fixPolarity()
             }
         }
+        fillPuzzle()
     }
     
     func didWeWin() {
