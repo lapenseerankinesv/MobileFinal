@@ -113,6 +113,31 @@ class SlidingPuzzleViewController: UIViewController {
         }
     }
     
+    func selectIndex(index: Int) {
+        let blankIndex = rPuzzle.firstIndex(of: 0)!
+        let userI = index % 3
+        let userJ = index / 3
+        let blankI = blankIndex % 3
+        let blankJ = blankIndex / 3
+
+        if userI == blankI {
+            if userJ == blankJ - 1 || userJ == blankJ + 1 {
+                let v = rPuzzle[index]
+                rPuzzle[index] = rPuzzle[blankIndex]
+                rPuzzle[blankIndex] = v
+            }
+        }
+        else if userJ == blankJ {
+            if userI == blankI - 1 || userI == blankI + 1 {
+                let v = rPuzzle[index]
+                rPuzzle[index] = rPuzzle[blankIndex]
+                rPuzzle[blankIndex] = v
+            }
+        }
+        fillPuzzle()
+        didWeWin()
+    }
+    
     @IBAction func startStopButtonTapped(_ sender: UIButton) {
         if (timerCounting) {
             timerCounting = false
