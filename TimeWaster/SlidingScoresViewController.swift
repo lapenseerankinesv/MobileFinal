@@ -20,8 +20,13 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
     var getTime = ""
     var getName = ""
     var won = false
-    var names = ["---", "---", "---", "---", "---"]
-    var times = ["---", "---", "---", "---", "---"]
+    
+    struct Score {
+        var name:String = "---"
+        var time:String = "---"
+    }
+    
+    var names = [Score(), Score(), Score(), Score(), Score()]
     
     var listArray = [NSManagedObject]()
 
@@ -43,12 +48,12 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
     func addAndSave() {
         let entName = "Score\(self.getDiff)"
         for i in 0...4 {
-            if names[i] == "---" {
-                names[i] = getName
-                times[i] = getTime
+            if names[i].name == "---" {
+                names[i].name = getName
+                times[i].time = getTime
                 let newEntity = NSEntityDescription.insertNewObject(forEntityName: entName, into: dataManager)
                 newEntity.setValue(getName, forKey: "username")
-                newEntity.setValue(times[i], forKey: "timing")
+                newEntity.setValue(getTime, forKey: "timing")
                 do {
                     try self.dataManager.save()
                     listArray.append(newEntity)
