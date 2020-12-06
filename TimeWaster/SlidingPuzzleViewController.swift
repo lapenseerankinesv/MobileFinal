@@ -6,17 +6,18 @@
 //
 
 import UIKit
+import SwiftUI
 
-class SlidingPuzzleViewController: UIViewController {
+class SlidingPuzzleViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     var name = ""
     var won = false
     var time = 0
-    var diff = 4
+    var diff = 3
     @IBOutlet weak var difficultyLabel: UILabel!
     @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var startStopButton: UIButton!
-    @IBOutlet weak var gameLabel: UILabel!
+    @IBOutlet weak var collectionView: UICollectionView!
     
     var puzzle = [Int]()
     var rPuzzle = [Int]()
@@ -26,30 +27,51 @@ class SlidingPuzzleViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView.delegate = self
+        collectionView.dataSource = self
         difficultyLabel.text = "\(diff) x \(diff) Puzzle"
+        
         self.initGame()
     }
     
-    func fillPuzzle() {
-        var final = ""
-        var curr = 0
-        for _ in 0...diff-1 {
-            var str = ""
-            for _ in 0...diff-1 {
-                var temp = String(rPuzzle[curr])
-                if temp == "0" {
-                    temp = " "
-                }
-                if temp.count == 1 {
-                    temp = " " + temp
-                }
-                temp += " "
-                str += temp
-                curr += 1
-            }
-            final += str + "\n"
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let wid = Double(365.0 / Double(self.diff+1))
+        let hi = Double(365.0 / Double(self.diff+1))
+        return CGSize(width: wid, height: hi)
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return diff*diff
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "customCell", for: indexPath) as! itemCell
+        var str = String(rPuzzle[indexPath.row])
+        if str == "0" {
+            str = " "
         }
-        gameLabel.text = final
+        cell.itemLabel.text = str
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if timerCounting {
+            let alert = UIAlertController(title: "Your Choice", message: "\(indexPath.row)", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: {(action) -> Void in
+                self.selectIndex(index: indexPath.row)
+            })
+            alert.addAction(okAction)
+            self.present(alert, animated: true, completion: nil)
+            
+        }
+        else {
+            let alert = UIAlertController(title: "Game Not Started", message: "Press \"Start\" to play game.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "Reset", style: .default, handler: {(action) -> Void in
+            })
+            alert.addAction(okAction)
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     func countInversions() -> Int {
@@ -123,7 +145,7 @@ class SlidingPuzzleViewController: UIViewController {
             fixPolarity()
             }
         }
-        fillPuzzle()
+        self.collectionView.reloadData()
     }
     
     func didWeWin() {
@@ -161,7 +183,7 @@ class SlidingPuzzleViewController: UIViewController {
                 rPuzzle[blankIndex] = v
             }
         }
-        fillPuzzle()
+        self.collectionView.reloadData()
         didWeWin()
     }
     
@@ -251,9 +273,6 @@ class SlidingPuzzleViewController: UIViewController {
         }
     }
     
-    @IBAction func winGame(_ sender: UIButton) {
-        didWinGame()
-    }
     @IBAction func diffButtonTapped(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "Choose Difficulty Setting", message: "Current Difficulty: \(self.diff)\n\n\n\n\n\n", preferredStyle: .alert)
         
