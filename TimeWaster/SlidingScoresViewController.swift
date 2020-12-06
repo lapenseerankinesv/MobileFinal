@@ -55,8 +55,8 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
                 newEntity.setValue(getName, forKey: "username")
                 newEntity.setValue(getTime, forKey: "timing")
                 do {
-                    try self.dataManager.save()
                     listArray.append(newEntity)
+                    try self.dataManager.save()
                 } catch {
                     print("Error saving data")
                 }
@@ -74,16 +74,15 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
                 }
             }
             do {
-                try self.dataManager.save()
                 let newEntity = NSEntityDescription.insertNewObject(forEntityName: entName, into: dataManager)
                 newEntity.setValue(getName, forKey: "username")
                 newEntity.setValue(getTime, forKey: "timing")
                 listArray.append(newEntity)
+                try self.dataManager.save()
             } catch {
                 print("Error deleting data")
             }
         }
-        
         fetchData()
     }
     

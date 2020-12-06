@@ -35,8 +35,8 @@ class SlidingPuzzleViewController: UIViewController, UICollectionViewDataSource,
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let wid = Double(365.0 / Double(self.diff+1))
-        let hi = Double(365.0 / Double(self.diff+1))
+        let wid = Double(365.0 / Double(self.diff)) - 10.0
+        let hi = Double(365.0 / Double(self.diff)) - 10.0
         return CGSize(width: wid, height: hi)
         
     }
@@ -57,20 +57,19 @@ class SlidingPuzzleViewController: UIViewController, UICollectionViewDataSource,
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if timerCounting {
-            let alert = UIAlertController(title: "Your Choice", message: "\(indexPath.row)", preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: .default, handler: {(action) -> Void in
-                self.selectIndex(index: indexPath.row)
-            })
-            alert.addAction(okAction)
-            self.present(alert, animated: true, completion: nil)
-            
+            self.selectIndex(index: indexPath.row)
         }
         else {
-            let alert = UIAlertController(title: "Game Not Started", message: "Press \"Start\" to play game.", preferredStyle: .alert)
+            /*let alert = UIAlertController(title: "Game Not Started", message: "Press \"Start\" to play game.", preferredStyle: .alert)
             let okAction = UIAlertAction(title: "Reset", style: .default, handler: {(action) -> Void in
             })
             alert.addAction(okAction)
-            self.present(alert, animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)*/
+            timerCounting = true
+            startStopButton.setTitle("STOP", for: .normal)
+            startStopButton.setTitleColor(UIColor.red, for: .normal)
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCounter), userInfo: nil, repeats: true)
+            self.selectIndex(index: indexPath.row)
         }
     }
     
@@ -163,10 +162,10 @@ class SlidingPuzzleViewController: UIViewController, UICollectionViewDataSource,
     
     func selectIndex(index: Int) {
         let blankIndex = rPuzzle.firstIndex(of: (diff*diff))!
-        let userI = index % 3
-        let userJ = index / 3
-        let blankI = blankIndex % 3
-        let blankJ = blankIndex / 3
+        let userI = index % diff
+        let userJ = index / diff
+        let blankI = blankIndex % diff
+        let blankJ = blankIndex / diff
 
         if userI == blankI {
             if userJ == blankJ - 1 || userJ == blankJ + 1 {
@@ -309,6 +308,7 @@ class SlidingPuzzleViewController: UIViewController, UICollectionViewDataSource,
         self.startStopButton.setTitle("START", for: .normal)
         self.startStopButton.setTitleColor(UIColor.blue, for: .normal)
         self.timerLabel.text = self.makeTimeString(hours: 0, minutes: 0, seconds: 0)
+        self.initGame()
     }
     
     @IBAction func showHighScores(_ sender: UIButton) {
