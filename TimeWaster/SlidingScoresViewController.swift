@@ -20,8 +20,13 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
     var getTime = ""
     var getName = ""
     var won = false
-    var names = ["---", "---", "---", "---", "---"]
-    var times = ["---", "---", "---", "---", "---"]
+    
+    struct Score {
+        var name:String = "___"
+        var time:String = "___"
+    }
+    
+    var names = [Score(), Score(), Score(), Score(), Score(), Score(), Score(), Score(), Score(), Score()]
     
     var listArray = [NSManagedObject]()
 
@@ -39,16 +44,16 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
         }
         // Do any additional setup after loading the view.
     }
-    
     func addAndSave() {
         let entName = "Score\(self.getDiff)"
-        for i in 0...4 {
-            if names[i] == "---" {
-                names[i] = getName
-                times[i] = getTime
+        
+        var flag = false
+        for i in 0...9 {
+            if names[i].name == "---" {
+                flag = true
                 let newEntity = NSEntityDescription.insertNewObject(forEntityName: entName, into: dataManager)
                 newEntity.setValue(getName, forKey: "username")
-                newEntity.setValue(times[i], forKey: "timing")
+                newEntity.setValue(getTime, forKey: "timing")
                 do {
                     try self.dataManager.save()
                     listArray.append(newEntity)
@@ -58,6 +63,27 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
                 break
             }
         }
+        names = names.sorted(by: { $0.time < $1.time })
+        if flag == false {
+            if getTime < names[9].time {
+                for item in listArray {
+                    if item.value(forKey: "username") as! String == names[9].name && item.value(forKey: "timing") as! String == names[9].time {
+                        dataManager.delete(item)
+                        break
+                    }
+                }
+            }
+            do {
+                try self.dataManager.save()
+                let newEntity = NSEntityDescription.insertNewObject(forEntityName: entName, into: dataManager)
+                newEntity.setValue(getName, forKey: "username")
+                newEntity.setValue(getTime, forKey: "timing")
+                listArray.append(newEntity)
+            } catch {
+                print("Error deleting data")
+            }
+        }
+        
         fetchData()
     }
     
@@ -71,13 +97,14 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
             for item in listArray {
                 let uName = item.value(forKey: "username") as! String
                 let uScore = item.value(forKey: "timing") as! String
-                names[i] = uName
-                times[i] = uScore
+                names[i].name = uName
+                names[i].time = uScore
                 i += 1
             }
         } catch {
             print("Error retriving data")
         }
+        names = names.sorted(by: { $0.time < $1.time })
     }
 
     @IBAction func playSlidingAgain(_ sender: UIButton) {
@@ -91,21 +118,19 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = scoresTable.dequeueReusableCell(withIdentifier: cellID)
         if (cell == nil) {
-            cell = UITableViewCell(style:UITableViewCell.CellStyle.default,
+            cell = UITableViewCell(style:UITableViewCell.CellStyle.value1,
                                    reuseIdentifier: cellID)
         }
         
         let num = 10
         
-        var tempName = names[indexPath.row]
-        if tempName.count > 10 {
-            tempName = String(name.dropLast(name.count-10))
+        var tempName = names[indexPath.row].name
+        if tempName.count > num {
+            tempName = String(tempName.dropLast(tempName.count-num))
         }
-        else if tempName.count < 10 {
-            for _ in 1...10-tempName.count {
-                tempName += " "
-        }
-        cell?.textLabel?.text = "\(tempName)  \(times[indexPath.row])"
+        
+        cell?.textLabel?.text = "\(tempName)"
+        cell?.detailTextLabel?.text = "\(names[indexPath.row].time)"
         //cell?.textLabel?.text = String(format: "%s%-10s", "\(names[indexPath.row])", "\(times[indexPath.row])")
         return cell!
     }

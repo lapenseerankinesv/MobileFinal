@@ -12,13 +12,13 @@ class SlidingPuzzleViewController: UIViewController {
     var name = ""
     var won = false
     var time = 0
-    var diff = 3
+    var diff = 4
     @IBOutlet weak var difficultyLabel: UILabel!
     @IBOutlet weak var timerLabel: UILabel!
     @IBOutlet weak var startStopButton: UIButton!
+    @IBOutlet weak var gameLabel: UILabel!
     
-    var puzzle = Array(1...diff*diff-1)
-    puzzle.append(0)
+    var puzzle = [Int]()
     var rPuzzle = [Int]()
     
     var timer:Timer = Timer()
@@ -27,6 +27,29 @@ class SlidingPuzzleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         difficultyLabel.text = "\(diff) x \(diff) Puzzle"
+        self.initGame()
+    }
+    
+    func fillPuzzle() {
+        var final = ""
+        var curr = 0
+        for _ in 0...diff-1 {
+            var str = ""
+            for _ in 0...diff-1 {
+                var temp = String(rPuzzle[curr])
+                if temp == "0" {
+                    temp = " "
+                }
+                if temp.count == 1 {
+                    temp = " " + temp
+                }
+                temp += " "
+                str += temp
+                curr += 1
+            }
+            final += str + "\n"
+        }
+        gameLabel.text = final
     }
     
     func countInversions() -> Int {
@@ -78,6 +101,9 @@ class SlidingPuzzleViewController: UIViewController {
     }
     
     func initGame() {
+        puzzle = Array(1...(self.diff*self.diff)-1)
+        puzzle.append(0)
+        rPuzzle = [Int]()
         for _ in 1...diff*diff {
             let index = Int.random(in: 0..<puzzle.count)
             let number = puzzle[index]
@@ -110,7 +136,7 @@ class SlidingPuzzleViewController: UIViewController {
             }
         }
         if win {
-            winGame()
+            didWinGame()
         }
     }
     
@@ -167,7 +193,9 @@ class SlidingPuzzleViewController: UIViewController {
         })
         alert.addAction(okAction)
         alert.addAction(cancelAction)
-        self.present(alert, animated: true, completion: nil)    }
+        self.present(alert, animated: true, completion: nil)
+        self.initGame()
+    }
     
     @objc func timerCounter() {
         time += 1
@@ -199,10 +227,11 @@ class SlidingPuzzleViewController: UIViewController {
         nextVC.won = self.won
     }
     
-    @IBAction func winGame(_ sender: UIButton) {
+    func didWinGame() {
         if (timerCounting) {
             timerCounting = false
             timer.invalidate()
+            
             startStopButton.setTitle("START", for: .normal)
             startStopButton.setTitleColor(UIColor.blue, for: .normal)
             
@@ -220,7 +249,10 @@ class SlidingPuzzleViewController: UIViewController {
                 self.present(alert, animated: true, completion: nil)
             
         }
-        
+    }
+    
+    @IBAction func winGame(_ sender: UIButton) {
+        didWinGame()
     }
     @IBAction func diffButtonTapped(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "Choose Difficulty Setting", message: "Current Difficulty: \(self.diff)\n\n\n\n\n\n", preferredStyle: .alert)
@@ -243,6 +275,7 @@ class SlidingPuzzleViewController: UIViewController {
         let sliderAction = UIAlertAction(title: "OK", style: .default, handler: { (result : UIAlertAction) -> Void in
             self.diff = Int(stepper.value)
             self.difficultyLabel.text = "\(self.diff) x \(self.diff) Puzzle"
+            self.initGame()
         })
         let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
         alert.addAction(sliderAction)
@@ -252,6 +285,12 @@ class SlidingPuzzleViewController: UIViewController {
     
     func gotto() {
         performSegue(withIdentifier: "slidingScoresLink", sender: self)
+        self.time = 0
+        self.timer.invalidate()
+        self.timerCounting = false
+        self.startStopButton.setTitle("START", for: .normal)
+        self.startStopButton.setTitleColor(UIColor.blue, for: .normal)
+        self.timerLabel.text = self.makeTimeString(hours: 0, minutes: 0, seconds: 0)
     }
     
     @IBAction func showHighScores(_ sender: UIButton) {
