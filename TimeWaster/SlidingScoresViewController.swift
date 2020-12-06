@@ -76,8 +76,8 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
             for item in listArray {
                 let uName = item.value(forKey: "username") as! String
                 let uScore = item.value(forKey: "timing") as! String
-                names[i] = uName
-                times[i] = uScore
+                names[i].name = uName
+                names[i].time = uScore
                 i += 1
             }
         } catch {
