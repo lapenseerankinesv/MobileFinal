@@ -48,7 +48,7 @@ class SlidingPuzzleViewController: UIViewController, UICollectionViewDataSource,
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "customCell", for: indexPath) as! itemCell
         var str = String(rPuzzle[indexPath.row])
-        if str == "0" {
+        if str == "\(diff*diff)" {
             str = " "
         }
         cell.itemLabel.text = str
@@ -123,8 +123,7 @@ class SlidingPuzzleViewController: UIViewController, UICollectionViewDataSource,
     }
     
     func initGame() {
-        puzzle = Array(1...(self.diff*self.diff)-1)
-        puzzle.append(0)
+        puzzle = Array(1...(self.diff*self.diff))
         rPuzzle = [Int]()
         for _ in 1...diff*diff {
             let index = Int.random(in: 0..<puzzle.count)
@@ -151,7 +150,7 @@ class SlidingPuzzleViewController: UIViewController, UICollectionViewDataSource,
     func didWeWin() {
         var win = true
         let size = diff
-        for i in 0...size*size-2 {
+        for i in 0...size*size-1 {
             if rPuzzle[i] != i+1 {
                 win = false
                 break
@@ -163,7 +162,7 @@ class SlidingPuzzleViewController: UIViewController, UICollectionViewDataSource,
     }
     
     func selectIndex(index: Int) {
-        let blankIndex = rPuzzle.firstIndex(of: 0)!
+        let blankIndex = rPuzzle.firstIndex(of: (diff*diff))!
         let userI = index % 3
         let userJ = index / 3
         let blankI = blankIndex % 3
