@@ -95,9 +95,15 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
                                    reuseIdentifier: cellID)
         }
         
+        let num = 10
+        
         var tempName = names[indexPath.row]
         if tempName.count > 10 {
             tempName = String(name.dropLast(name.count-10))
+        }
+        else if tempName.count < 10 {
+            for _ in 1...10-tempName.count {
+                tempName += " "
         }
         cell?.textLabel?.text = "\(tempName)  \(times[indexPath.row])"
         //cell?.textLabel?.text = String(format: "%s%-10s", "\(names[indexPath.row])", "\(times[indexPath.row])")
