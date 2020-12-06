@@ -47,13 +47,15 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
     
     func addAndSave() {
         let entName = "Score\(self.getDiff)"
+        let newEntity = NSEntityDescription.insertNewObject(forEntityName: entName, into: dataManager)
+        newEntity.setValue(getName, forKey: "username")
+        newEntity.setValue(getTime, forKey: "timing")
+        var flag = false
         for i in 0...4 {
             if names[i].name == "---" {
+                flag = true
                 names[i].name = getName
                 times[i].time = getTime
-                let newEntity = NSEntityDescription.insertNewObject(forEntityName: entName, into: dataManager)
-                newEntity.setValue(getName, forKey: "username")
-                newEntity.setValue(getTime, forKey: "timing")
                 do {
                     try self.dataManager.save()
                     listArray.append(newEntity)
@@ -62,6 +64,26 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
                 }
                 break
             }
+        }
+        names.sorted(by: { $0.time < $1.time })
+        if !flag {
+            if getTime < names[4].time {
+                for item in listArray {
+                    if item.value(forKey: "username") as! String == names[4].name && item.value(forKey: "timing") as! String == names[4].time {
+                        dataManager.delete(item)
+                        names[4].name = getName
+                        names[4].time = getTime
+                        break
+                    }
+                }
+            }
+            do {
+                try self.dataManager.save()
+                listArray.append(newEntity)
+            } catch {
+                print("Error deleting data")
+            }
+            names.sorted(by: { $0.time < $1.time })
         }
         fetchData()
     }
@@ -83,6 +105,7 @@ class SlidingScoresViewController: UIViewController, UITableViewDelegate, UITabl
         } catch {
             print("Error retriving data")
         }
+        names.sorted(by: { $0.time < $1.time })
     }
 
     @IBAction func playSlidingAgain(_ sender: UIButton) {
